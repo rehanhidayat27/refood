@@ -1,0 +1,6 @@
+{
+  "name": "Refood POS",
+  "description": "Modern Indonesian culinary Point of Sale & restaurant management system with multi-role PIN access, real-time analytics, automated payments, WhatsApp & email notifications, recipes, stock management, and PDF/Excel reports.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
