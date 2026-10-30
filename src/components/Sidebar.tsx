@@ -15,6 +15,7 @@ import { getThemeClasses } from '../utils/themeHelper.ts';
 
 export const Sidebar: React.FC = () => {
   const {
+    t,
     activeTab,
     setActiveTab,
     currentStaff,
@@ -38,44 +39,44 @@ export const Sidebar: React.FC = () => {
   const navItems: NavItem[] = [
     {
       id: 'pos',
-      label: 'Kasir POS (Menu & Order)',
+      label: t('navPos'),
       icon: LayoutGrid,
       roles: ['kasir', 'manager', 'admin'],
     },
     {
       id: 'products',
-      label: 'Manajemen Katalog Menu',
+      label: t('navProducts'),
       icon: ShoppingBag,
       roles: ['admin', 'manager'],
     },
     {
       id: 'stock',
-      label: 'Manajemen Stok Bahan Baku',
+      label: t('navStock'),
       icon: Package,
       roles: ['admin', 'manager'],
       badge: criticalStockCount > 0 ? criticalStockCount : undefined,
     },
     {
       id: 'dashboard',
-      label: 'Dashboard Analitik Penjualan',
+      label: t('navDashboard'),
       icon: BarChart3,
       roles: ['manager', 'admin'],
     },
     {
       id: 'reports',
-      label: 'Laporan Keuangan & HPP',
+      label: t('navReports'),
       icon: FileText,
       roles: ['manager', 'admin'],
     },
     {
       id: 'calendar',
-      label: 'Kalender Jadwal Restoran',
+      label: t('navCalendar'),
       icon: Calendar,
       roles: ['kasir', 'manager', 'admin'],
     },
     {
       id: 'settings',
-      label: 'Pengaturan & Cloud Backup',
+      label: t('navSettings'),
       icon: Settings,
       roles: ['kasir', 'manager', 'admin'],
     },

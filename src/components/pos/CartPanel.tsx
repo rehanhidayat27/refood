@@ -17,6 +17,7 @@ import { getThemeClasses } from '../../utils/themeHelper.ts';
 
 export const CartPanel: React.FC<{ onCloseMobile?: () => void }> = ({ onCloseMobile }) => {
   const {
+    t,
     cart,
     updateCartQty,
     removeFromCart,
@@ -94,7 +95,7 @@ export const CartPanel: React.FC<{ onCloseMobile?: () => void }> = ({ onCloseMob
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-              Saldo Kasir POS
+              {t('balanceTitle')}
             </h3>
             <span className="text-[10px] text-slate-400 font-mono">ID: REF-8842</span>
           </div>
@@ -117,7 +118,7 @@ export const CartPanel: React.FC<{ onCloseMobile?: () => void }> = ({ onCloseMob
               </div>
 
               <div>
-                <span className="text-[10px] uppercase text-white/70 block">Total Omset Shift Ini</span>
+                <span className="text-[10px] uppercase text-white/70 block">{t('shiftTotal')}</span>
                 <div className="text-2xl font-black tracking-tight">Rp 5.285.800</div>
               </div>
 
@@ -133,13 +134,13 @@ export const CartPanel: React.FC<{ onCloseMobile?: () => void }> = ({ onCloseMob
         <div className="space-y-2 pt-1">
           <div className="flex items-center justify-between">
             <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-              Lokasi Meja / Pemesan
+              {t('locationTitle')}
             </h3>
             <button
               onClick={() => setIsChangingTable(!isChangingTable)}
-              className="text-xs font-bold text-orange-600 dark:text-orange-400 hover:underline"
+              className="text-xs font-bold text-orange-600 dark:text-orange-400 hover:underline cursor-pointer"
             >
-              {isChangingTable ? 'Selesai' : 'Ganti Meja'}
+              {isChangingTable ? 'OK' : t('changeLocation')}
             </button>
           </div>
 
@@ -172,7 +173,7 @@ export const CartPanel: React.FC<{ onCloseMobile?: () => void }> = ({ onCloseMob
                   {activeTableOrTakeaway}
                 </h4>
                 <p className="text-[11px] text-slate-400 truncate">
-                  Layanan makan di tempat & takeaway Refood POS
+                  {t('tableDefault')}
                 </p>
               </div>
             </div>
@@ -185,16 +186,16 @@ export const CartPanel: React.FC<{ onCloseMobile?: () => void }> = ({ onCloseMob
             <div className="flex items-center gap-2">
               <Utensils className="w-3.5 h-3.5 text-orange-500" />
               <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-                Order Menu ({cart.length})
+                {t('orderMenuTitle')} ({cart.length})
               </h3>
             </div>
             {cart.length > 0 && (
               <button
                 onClick={clearCart}
-                className="text-[11px] text-red-500 hover:text-red-700 font-semibold flex items-center gap-1"
+                className="text-[11px] text-red-500 hover:text-red-700 font-semibold flex items-center gap-1 cursor-pointer"
                 title="Kosongkan Keranjang"
               >
-                <Trash2 className="w-3 h-3" /> Bersihkan
+                <Trash2 className="w-3 h-3" /> {t('clearBtn')}
               </button>
             )}
           </div>
@@ -202,8 +203,8 @@ export const CartPanel: React.FC<{ onCloseMobile?: () => void }> = ({ onCloseMob
           {cart.length === 0 ? (
             <div className="py-8 text-center bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700 space-y-2">
               <Receipt className="w-8 h-8 text-slate-300 dark:text-slate-600 mx-auto" />
-              <p className="text-xs text-slate-500 dark:text-slate-400">Keranjang pesanan masih kosong</p>
-              <p className="text-[11px] text-slate-400">Klik "+ Tambah" pada menu makanan atau minuman</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{t('emptyCartTitle')}</p>
+              <p className="text-[11px] text-slate-400">{t('emptyCartSub')}</p>
             </div>
           ) : (
             <div className="space-y-2.5 max-h-56 overflow-y-auto pr-1">
@@ -276,31 +277,31 @@ export const CartPanel: React.FC<{ onCloseMobile?: () => void }> = ({ onCloseMob
         {/* 4. Bill Summary Calculation matching reference layout */}
         <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
           <div className="flex justify-between text-slate-500 dark:text-slate-400">
-            <span>Subtotal Menu</span>
+            <span>{t('subtotal')}</span>
             <span className="font-semibold text-slate-800 dark:text-slate-200">{formatIDR(subtotal)}</span>
           </div>
 
           {discountAmount > 0 && (
             <div className="flex justify-between text-emerald-600 dark:text-emerald-400 font-medium">
               <span className="flex items-center gap-1">
-                <Tag className="w-3 h-3" /> Potongan Kupon
+                <Tag className="w-3 h-3" /> {t('couponDiscount')}
               </span>
               <span>-{formatIDR(discountAmount)}</span>
             </div>
           )}
 
           <div className="flex justify-between text-slate-500 dark:text-slate-400">
-            <span>Biaya Layanan (Service 2%)</span>
+            <span>{t('serviceFee')}</span>
             <span className="font-semibold text-slate-800 dark:text-slate-200">{formatIDR(serviceFee)}</span>
           </div>
 
           <div className="flex justify-between text-slate-500 dark:text-slate-400">
-            <span>Pajak Restoran (PB1 10%)</span>
+            <span>{t('taxPB1')}</span>
             <span className="font-semibold text-slate-800 dark:text-slate-200">{formatIDR(tax)}</span>
           </div>
 
           <div className="flex justify-between text-base font-extrabold text-slate-900 dark:text-white pt-2 border-t border-slate-200 dark:border-slate-700">
-            <span>Total Tagihan</span>
+            <span>{t('totalBill')}</span>
             <span className="text-orange-600 dark:text-orange-400">{formatIDR(total)}</span>
           </div>
         </div>
@@ -315,7 +316,7 @@ export const CartPanel: React.FC<{ onCloseMobile?: () => void }> = ({ onCloseMob
               </div>
               <button
                 onClick={removeCoupon}
-                className="text-red-500 hover:text-red-700 font-bold text-xs"
+                className="text-red-500 hover:text-red-700 font-bold text-xs cursor-pointer"
               >
                 Hapus
               </button>
@@ -326,7 +327,7 @@ export const CartPanel: React.FC<{ onCloseMobile?: () => void }> = ({ onCloseMob
                 <Tag className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
-                  placeholder="Kupon diskon (HEMAT10)"
+                  placeholder={t('couponPlaceholder')}
                   value={couponInput}
                   onChange={(e) => setCouponInput(e.target.value)}
                   className="w-full text-xs pl-8 pr-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white uppercase placeholder-normal placeholder:capitalize focus:outline-none focus:ring-1 focus:ring-orange-500"
@@ -334,9 +335,9 @@ export const CartPanel: React.FC<{ onCloseMobile?: () => void }> = ({ onCloseMob
               </div>
               <button
                 type="submit"
-                className="px-3 py-2 text-xs font-bold rounded-xl bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 text-white shrink-0 transition-colors"
+                className="px-3 py-2 text-xs font-bold rounded-xl bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 text-white shrink-0 transition-colors cursor-pointer"
               >
-                Klaim
+                {t('applyCoupon')}
               </button>
             </form>
           )}
@@ -362,14 +363,14 @@ export const CartPanel: React.FC<{ onCloseMobile?: () => void }> = ({ onCloseMob
             setIsPaymentModalOpen(true);
           }}
           disabled={cart.length === 0}
-          className={`w-full py-3.5 px-4 rounded-2xl text-sm font-extrabold text-white ${
+          className={`w-full py-3.5 px-4 rounded-2xl text-sm font-extrabold text-white cursor-pointer ${
             cart.length > 0
               ? `${theme.primaryBg} ${theme.primaryHover} shadow-lg shadow-orange-500/25 active:scale-[0.98]`
               : 'bg-slate-200 dark:bg-slate-700 text-slate-400 cursor-not-allowed'
           } transition-all duration-200 flex items-center justify-center gap-2`}
           aria-label="Lanjutkan ke Pembayaran Otomatis"
         >
-          <span>Lanjut Pembayaran ({formatIDR(total)})</span>
+          <span>{t('proceedCheckout')} ({formatIDR(total)})</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>

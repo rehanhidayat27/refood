@@ -21,8 +21,12 @@ import {
 } from '../utils/mockData.ts';
 import { soundEffects } from '../utils/soundEffects.ts';
 import { calculateOrderTotals, checkLowStock } from '../utils/posCalculations.ts';
+import { translations } from '../utils/translations.ts';
 
 interface AppContextType {
+  // Translations
+  t: (key: keyof typeof translations.id) => string;
+
   // Auth & Roles
   staffList: StaffUser[];
   currentStaff: StaffUser;
@@ -177,11 +181,29 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   // Settings
   const [themeColor, setThemeColor] = useState<ThemeColor>('orange');
-  const [darkMode, setDarkMode] = useState<boolean>(false);
-  const [language, setLanguage] = useState<AppLanguage>('id');
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    const saved = localStorage.getItem('refood_dark_mode');
+    if (saved !== null) return saved === 'true';
+    return typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
+  const [language, setLanguageState] = useState<AppLanguage>(() => {
+    const saved = localStorage.getItem('refood_language');
+    return (saved === 'en' || saved === 'id') ? saved : 'id';
+  });
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   const [offlineMode, setOfflineMode] = useState<boolean>(false);
   const [lastCloudBackup, setLastCloudBackup] = useState<string>('2026-10-29 04:00 WIB');
+
+  const setLanguage = (lang: AppLanguage) => {
+    setLanguageState(lang);
+    localStorage.setItem('refood_language', lang);
+    showToast(lang === 'en' ? 'Language set to English 🇬🇧' : 'Bahasa diatur ke Bahasa Indonesia 🇮🇩');
+  };
+
+  const t = (key: keyof typeof translations.id): string => {
+    const dict = translations[language] || translations.id;
+    return (dict as Record<string, string>)[key] || translations.id[key] || key;
+  };
 
   // Notifications
   const [notifications, setNotifications] = useState<NotificationItem[]>([
@@ -210,15 +232,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [receiptModalOrder, setReceiptModalOrder] = useState<OrderTransaction | null>(null);
   const [selectedRecipeItem, setSelectedRecipeItem] = useState<MenuItem | null>(null);
 
-  // Auto detect dark mode from system preference
+  // Update HTML class for dark mode and persist
   useEffect(() => {
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setDarkMode(true);
-    }
-  }, []);
-
-  // Update HTML class for dark mode
-  useEffect(() => {
+    localStorage.setItem('refood_dark_mode', String(darkMode));
     if (darkMode) {
       document.documentElement.classList.add('dark');
     } else {
@@ -475,6 +491,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     showToast(`Pesanan ${newOrder.orderNumber} berhasil dicatat & dibayar!`);
     clearCart();
     setIsPaymentModalOpen(false);
+    // Display animated thermal receipt immediately as requested
+    setReceiptModalOrder(newOrder);
     return newOrder;
   };
 
@@ -581,6 +599,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   return (
     <AppContext.Provider
       value={{
+        t,
         staffList,
         currentStaff,
         switchStaffRoleWithPin,

@@ -11,12 +11,16 @@ import {
   Shield,
   ChevronDown,
   ShoppingBag,
+  Globe,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext.tsx';
 import { getThemeClasses } from '../utils/themeHelper.ts';
 
 export const Header: React.FC<{ onOpenMobileCart?: () => void }> = ({ onOpenMobileCart }) => {
   const {
+    t,
+    language,
+    setLanguage,
     searchQuery,
     setSearchQuery,
     currentStaff,
@@ -65,7 +69,7 @@ export const Header: React.FC<{ onOpenMobileCart?: () => void }> = ({ onOpenMobi
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
-            placeholder="Cari menu nusantara, kategori, atau ID..."
+            placeholder={t('searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white dark:focus:bg-slate-850 transition-all"
@@ -83,7 +87,21 @@ export const Header: React.FC<{ onOpenMobileCart?: () => void }> = ({ onOpenMobi
       </div>
 
       {/* Right Controls */}
-      <div className="flex items-center gap-2 md:gap-4 ml-4">
+      <div className="flex items-center gap-2 md:gap-3 ml-4">
+        {/* Language quick switcher */}
+        <button
+          onClick={() => {
+            playSound('click');
+            setLanguage(language === 'id' ? 'en' : 'id');
+          }}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all cursor-pointer shadow-xs active:scale-95"
+          title={language === 'id' ? 'Beralih ke English' : 'Switch to Bahasa Indonesia'}
+          aria-label="Ganti Bahasa / Switch Language"
+        >
+          <Globe className="w-3.5 h-3.5 text-orange-500" />
+          <span>{language === 'id' ? '🇮🇩 ID' : '🇬🇧 EN'}</span>
+        </button>
+
         {/* Offline / Online Sync Toggle */}
         <button
           onClick={() => {
@@ -101,12 +119,12 @@ export const Header: React.FC<{ onOpenMobileCart?: () => void }> = ({ onOpenMobi
           {offlineMode ? (
             <>
               <WifiOff className="w-3.5 h-3.5 animate-pulse text-amber-600" />
-              <span className="font-medium">Offline (Sync Lokal)</span>
+              <span className="font-medium">{t('offlineMode')}</span>
             </>
           ) : (
             <>
               <Wifi className="w-3.5 h-3.5 text-emerald-600" />
-              <span className="font-medium">Cloud Online</span>
+              <span className="font-medium">{t('cloudOnline')}</span>
             </>
           )}
         </button>
@@ -117,7 +135,7 @@ export const Header: React.FC<{ onOpenMobileCart?: () => void }> = ({ onOpenMobi
             setSoundEnabled(!soundEnabled);
             if (!soundEnabled) playSound('click');
           }}
-          className="p-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+          className="p-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors cursor-pointer"
           title={soundEnabled ? 'Matikan Efek Suara' : 'Aktifkan Efek Suara'}
           aria-label="Pengaturan Suara"
         >
@@ -130,11 +148,11 @@ export const Header: React.FC<{ onOpenMobileCart?: () => void }> = ({ onOpenMobi
             playSound('click');
             toggleDarkMode();
           }}
-          className="p-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+          className="p-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors cursor-pointer"
           title={darkMode ? 'Beralih ke Mode Terang' : 'Beralih ke Mode Gelap'}
           aria-label="Pengaturan Mode Gelap atau Terang"
         >
-          {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
+          {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600 dark:text-slate-300" />}
         </button>
 
         {/* Notifications Bell */}
@@ -144,7 +162,7 @@ export const Header: React.FC<{ onOpenMobileCart?: () => void }> = ({ onOpenMobi
               playSound('click');
               setShowNotifDropdown(!showNotifDropdown);
             }}
-            className="p-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors relative"
+            className="p-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors relative cursor-pointer"
             aria-label="Notifikasi Sistem"
           >
             <Bell className="w-4 h-4" />

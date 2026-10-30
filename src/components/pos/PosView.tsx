@@ -26,6 +26,8 @@ const CATEGORIES: FoodCategory[] = [
 
 export const PosView: React.FC = () => {
   const {
+    t,
+    language,
     menuItems,
     selectedCategory,
     setSelectedCategory,
@@ -80,19 +82,19 @@ export const PosView: React.FC = () => {
         <div className="relative z-10 max-w-lg space-y-3">
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold text-orange-600 dark:text-orange-400 tracking-wide uppercase">
-              Promo Spesial Hari Ini
+              {t('promoBadge')}
             </span>
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-orange-500 text-white shadow-sm">
-              <Sparkles className="w-3 h-3" /> GRATIS Ongkir
+              <Sparkles className="w-3 h-3" /> {t('freeDelivery')}
             </span>
           </div>
 
           <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white leading-tight">
-            Eksplorasi Kelezatan Menu Nusantara Hari Ini
+            {t('promoHeadline')}
           </h1>
 
           <p className="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-            Sajian autentik dengan 100% rempah pilihan khas Indonesia. Dilengkapi takaran resep presisi & sinkronisasi stok bahan otomatis.
+            {t('promoSub')}
           </p>
 
           <div className="pt-2 flex items-center gap-3">
@@ -101,13 +103,13 @@ export const PosView: React.FC = () => {
                 playSound('click');
                 setSelectedCategory('Semua');
               }}
-              className={`px-5 py-2.5 rounded-full text-xs font-bold text-white ${theme.primaryBg} ${theme.primaryHover} shadow-md shadow-orange-500/20 transition-all flex items-center gap-2`}
+              className={`px-5 py-2.5 rounded-full text-xs font-bold text-white ${theme.primaryBg} ${theme.primaryHover} shadow-md shadow-orange-500/20 transition-all flex items-center gap-2 cursor-pointer`}
             >
-              Lihat Semua Menu
+              {t('checkMenu')}
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
             <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
-              ⚡ Transaksi Cepat & Otomatis
+              {t('fastTx')}
             </span>
           </div>
         </div>
@@ -139,15 +141,25 @@ export const PosView: React.FC = () => {
           <div className="flex items-center gap-2">
             <SlidersHorizontal className="w-4 h-4 text-orange-500" />
             <h2 className="text-sm md:text-base font-bold text-slate-900 dark:text-white">
-              Kategori Kuliner Nusantara
+              {t('categorySection')}
             </h2>
           </div>
-          <span className="text-xs text-slate-400">{filteredItems.length} menu tersedia</span>
+          <span className="text-xs text-slate-400">{filteredItems.length} {t('dishesAvailable')}</span>
         </div>
 
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
           {CATEGORIES.map((category) => {
             const isSelected = selectedCategory === category;
+            const categoryLabel = language === 'en'
+              ? (category === 'Semua' ? 'All Dishes'
+                 : category === 'Makanan Utama' ? 'Main Courses'
+                 : category === 'Ayam & Bebek' ? 'Chicken & Duck'
+                 : category === 'Sate & Bakso' ? 'Satay & Meatballs'
+                 : category === 'Sayur & Sup' ? 'Vegetables & Soups'
+                 : category === 'Minuman Tradisional' ? 'Traditional Drinks'
+                 : 'Desserts & Snacks')
+              : category;
+
             return (
               <button
                 key={category}
@@ -155,33 +167,33 @@ export const PosView: React.FC = () => {
                   playSound('click');
                   setSelectedCategory(category);
                 }}
-                className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 ${
+                className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${
                   isSelected
                     ? `${theme.primaryBg} text-white shadow-md shadow-orange-500/20`
                     : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700'
                 }`}
               >
-                {category}
+                {categoryLabel}
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Main Menu Grid: "Based In The Type Of Food You Like" matching reference */}
+      {/* Main Menu Grid: "Based In The Type Of Food You Like" with ample, neat 3-column desktop layout */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-base md:text-lg font-bold text-slate-900 dark:text-white">
-              Menu Terpilih Sesuai Selera Anda
+              {t('recommendedSection')}
             </h2>
-            <p className="text-xs text-slate-400">Pilihan hidangan tradisional favorit pelanggan restoran</p>
+            <p className="text-xs text-slate-400">{t('recommendedSub')}</p>
           </div>
           <button
             onClick={() => setSelectedCategory('Semua')}
-            className="flex items-center gap-1 text-xs font-bold text-orange-600 dark:text-orange-400 hover:text-orange-700"
+            className="flex items-center gap-1 text-xs font-bold text-orange-600 dark:text-orange-400 hover:text-orange-700 cursor-pointer"
           >
-            Lihat Semua <ChevronRight className="w-3.5 h-3.5" />
+            {t('viewAll')} <ChevronRight className="w-3.5 h-3.5" />
           </button>
         </div>
 
@@ -198,7 +210,7 @@ export const PosView: React.FC = () => {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-5">
             {filteredItems.map((item) => (
               <div
                 key={item.id}
@@ -218,7 +230,7 @@ export const PosView: React.FC = () => {
                     </span>
                     {item.isTopWeek && (
                       <span className="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-amber-500 text-white shadow-sm flex items-center gap-0.5">
-                        <Flame className="w-2.5 h-2.5" /> Favorit Minggu Ini
+                        <Flame className="w-2.5 h-2.5" /> {t('topWeek')}
                       </span>
                     )}
                   </div>
@@ -230,10 +242,10 @@ export const PosView: React.FC = () => {
                         playSound('click');
                         setSelectedRecipeItem(item);
                       }}
-                      className="absolute top-2.5 right-2.5 px-2 py-1 rounded-lg text-[10px] font-semibold bg-black/60 hover:bg-black/80 text-white backdrop-blur-sm flex items-center gap-1 transition-colors"
+                      className="absolute top-2.5 right-2.5 px-2 py-1 rounded-lg text-[10px] font-semibold bg-black/60 hover:bg-black/80 text-white backdrop-blur-sm flex items-center gap-1 transition-colors cursor-pointer"
                       title="Lihat Takaran Resep & Bahan"
                     >
-                      <BookOpen className="w-3 h-3 text-orange-400" /> Resep
+                      <BookOpen className="w-3 h-3 text-orange-400" /> {t('recipeBtn')}
                     </button>
                   )}
                 </div>
@@ -253,26 +265,29 @@ export const PosView: React.FC = () => {
                   </div>
 
                   {/* Meta stats */}
-                  <div className="flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-100 dark:border-slate-700/60 pt-2.5">
-                    <span>🔥 {item.calories} kkal</span>
+                  <div className="flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-100 dark:border-slate-700/60 pt-2">
+                    <span>🔥 {item.calories} {t('calories')}</span>
                     <span>🍽️ {item.serves}</span>
                   </div>
 
-                  {/* Price & Add to Cart button */}
-                  <div className="flex items-center justify-between pt-1">
-                    <div>
-                      <span className="text-xs text-slate-400 block font-normal leading-none mb-0.5">Harga</span>
-                      <span className="text-base font-extrabold text-orange-600 dark:text-orange-400">
+                  {/* Price & Add to Cart button - Perfectly aligned without overlapping */}
+                  <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100 dark:border-slate-700/60 mt-auto">
+                    <div className="min-w-0 flex-1">
+                      <span className="text-[10px] text-slate-400 font-semibold uppercase block leading-none mb-1">
+                        {t('price')}
+                      </span>
+                      <span className="text-sm sm:text-base font-extrabold text-orange-600 dark:text-orange-400 tracking-tight block truncate">
                         {formatIDR(item.price)}
                       </span>
                     </div>
 
                     <button
                       onClick={(e) => handleQuickAdd(item, e)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-bold text-white ${theme.primaryBg} ${theme.primaryHover} shadow-sm active:scale-95 transition-all flex items-center gap-1`}
-                      aria-label={`Tambah ${item.name} ke pesanan`}
+                      className={`shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold text-white ${theme.primaryBg} ${theme.primaryHover} shadow-sm active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer`}
+                      aria-label={`${t('addBtn')} ${item.name}`}
                     >
-                      <Plus className="w-3.5 h-3.5" /> Tambah
+                      <Plus className="w-3.5 h-3.5 stroke-[3]" />
+                      <span>{t('addBtn')}</span>
                     </button>
                   </div>
                 </div>
@@ -288,10 +303,10 @@ export const PosView: React.FC = () => {
           <div className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-orange-500" />
             <h2 className="text-base md:text-lg font-bold text-slate-900 dark:text-white">
-              Trending Orders (Pesanan Paling Populer)
+              {t('trendingSection')}
             </h2>
           </div>
-          <span className="text-xs text-slate-400">Update penjualan real-time</span>
+          <span className="text-xs text-slate-400">{t('trendingSub')}</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -322,7 +337,7 @@ export const PosView: React.FC = () => {
                           : 'bg-orange-100 text-orange-700 dark:bg-orange-950/60 dark:text-orange-300'
                       }`}
                     >
-                      {item.isTopMonth ? 'Top of the month' : 'Top of the week'}
+                      {item.isTopMonth ? t('topMonth') : t('topWeek')}
                     </span>
                   </div>
 
@@ -333,7 +348,7 @@ export const PosView: React.FC = () => {
                       isFeaturedOrange ? 'text-orange-100' : 'text-slate-400'
                     }`}
                   >
-                    <span>{item.calories} Cal</span>
+                    <span>{item.calories} {t('calories')}</span>
                     <span>•</span>
                     <span>{item.serves}</span>
                   </div>

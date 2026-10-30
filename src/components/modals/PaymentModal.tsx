@@ -20,6 +20,8 @@ import { getThemeClasses } from '../../utils/themeHelper.ts';
 
 export const PaymentModal: React.FC = () => {
   const {
+    t,
+    language,
     isPaymentModalOpen,
     setIsPaymentModalOpen,
     total,
@@ -45,10 +47,10 @@ export const PaymentModal: React.FC = () => {
   const triggerConfetti = () => {
     try {
       confetti({
-        particleCount: 80,
-        spread: 70,
+        particleCount: 90,
+        spread: 80,
         origin: { y: 0.6 },
-        colors: ['#f97316', '#22c55e', '#3b82f6', '#eab308'],
+        colors: ['#ea580c', '#16a34a', '#2563eb', '#eab308'],
       });
     } catch {
       // ignore
@@ -62,18 +64,17 @@ export const PaymentModal: React.FC = () => {
 
     setIsProcessing(true);
 
-    // Simulate instant automated payment gateway webhook/verification
+    // Instant automated payment verification
     setTimeout(() => {
       setIsProcessing(false);
-      const newOrder = completeCheckout(
+      completeCheckout(
         method,
-        customerName || 'Pelanggan Meja',
+        customerName || (language === 'en' ? 'Dine-in Customer' : 'Pelanggan Meja'),
         customerPhone,
         customerEmail
       );
-      setCompletedOrder(newOrder);
       triggerConfetti();
-    }, 1200);
+    }, 800);
   };
 
   const handleClose = () => {
@@ -273,19 +274,19 @@ export const PaymentModal: React.FC = () => {
             {/* Customer Details for Automated WhatsApp & Email notifications */}
             <div className="space-y-3 pt-2">
               <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">
-                Data Pelanggan (Untuk Notifikasi WhatsApp & Email Otomatis):
+                {t('customerDataLabel')}
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <input
                   type="text"
-                  placeholder="Nama Pelanggan (cth: Pak Bambang)"
+                  placeholder={t('customerNamePlaceholder')}
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
                   className="text-xs p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
                 />
                 <input
                   type="text"
-                  placeholder="No. WhatsApp (+62 812...)"
+                  placeholder={t('phonePlaceholder')}
                   value={customerPhone}
                   onChange={(e) => setCustomerPhone(e.target.value)}
                   className="text-xs p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
@@ -293,7 +294,7 @@ export const PaymentModal: React.FC = () => {
               </div>
               <input
                 type="email"
-                placeholder="Email Pelanggan (untuk invoice struk PDF)"
+                placeholder={t('emailPlaceholder')}
                 value={customerEmail}
                 onChange={(e) => setCustomerEmail(e.target.value)}
                 className="w-full text-xs p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
@@ -305,15 +306,15 @@ export const PaymentModal: React.FC = () => {
               <button
                 type="button"
                 onClick={handleClose}
-                className="py-3 px-4 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-600 dark:text-slate-300"
+                className="py-3 px-4 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-600 dark:text-slate-300 cursor-pointer"
               >
-                Batal
+                {t('cancel')}
               </button>
               <button
                 type="button"
                 disabled={isProcessing || (method === 'cash' && !cashChangeInfo.isSufficient)}
                 onClick={handleProcessPayment}
-                className={`flex-1 py-3 px-4 rounded-xl text-xs font-bold text-white ${theme.primaryBg} ${theme.primaryHover} shadow-lg shadow-orange-500/20 flex items-center justify-center gap-2`}
+                className={`flex-1 py-3 px-4 rounded-xl text-xs font-bold text-white ${theme.primaryBg} ${theme.primaryHover} shadow-lg shadow-orange-500/20 flex items-center justify-center gap-2 cursor-pointer`}
               >
                 {isProcessing ? (
                   <>
@@ -322,7 +323,7 @@ export const PaymentModal: React.FC = () => {
                   </>
                 ) : (
                   <>
-                    <span>Konfirmasi Pembayaran ({formatIDR(total)})</span>
+                    <span>{t('confirmPaymentBtn')} ({formatIDR(total)})</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
